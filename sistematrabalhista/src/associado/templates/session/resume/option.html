@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block pagina %}
+<div class='list'>
+	<div class='container'>
+		<ul class='row'>
+			<li class='col-md pb-4'>
+				<div class='card shadow'>
+					<div class='card-body'>
+						<h5 class='card-title text-center'>Novo currículo</h5>
+						<button
+							type='button' 
+							class='btn btn-info btn-block'
+							onclick='window.location.href=`{% url "resumecreate" %}`'
+						>
+							Acessar
+						</button>
+					</div>
+				</div>
+			</li>
+			<li class='col-md pb-4'>
+				<div class='card shadow'>
+					<div class='card-body'>
+						<h5 class='card-title text-center'>Visualizar currículo atual</h5>
+						<button
+							type='button' 
+							class='btn btn-info btn-block'
+							onclick='window.location.href=`{% url "resumeedit" 0 %}`'
+						>
+							Acessar
+						</button>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
+{% endblock %}

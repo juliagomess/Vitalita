@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang='pt-br'>
+<head>
+	<meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <link rel='stylesheet' type='text/css' href='{% static "bootstrap/css/bootstrap.min.css" %}' />
+    <link rel='stylesheet' type='text/css' href='{% static "css/login.css" %}' />
+    <script src='https://kit.fontawesome.com/50797efa34.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script type='text/javascript' src='{% static "js/reader.js" %}'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js'></script>
+    <script type='text/javascript' src='{% static "bootstrap/js/bootstrap.min.js" %}'></script>
+    <title>Administrativo</title>
+</head>
+<body>
+	<div class='background'>
+		{% if erro is not None %}
+			<div class='pop-overlay' onclick='this.style.display="none"'>
+				<div class='container'>
+					<div class='card'>
+						<div class='card-body'>
+							<h5 class='text-center'>Aviso</h5>
+							<button
+								type='button'
+								class='close'
+								aria-label='Fechar'
+							>
+								<span aria-hidden='true'>&times;</span>
+							</button>
+							<hr />
+							<p>{{ erro }}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+
+		<div class='content'>
+			<div class='container'>
+				<div class='form'>
+					<div class='card'>
+						<div class='card-body'>
+							<header>
+								<img src='{% static "assets/logo-extcomp.svg" %}' alt='Extcomp' />
+							</header>
+
+							{% block formulario %}
+								<form method='post' action='{% url "login" %}' autocomplete='off'>
+									{% csrf_token %}
+									<div class='form-group'>
+										<label for='email'>Email</label>
+										<input
+											type='email'
+											class='form-control'
+											id='email'
+											name='email'
+											placeholder='Preencha campo com o seu email'
+											value='{{ form.email }}'
+										/>
+									</div>
+									<div class='form-group'>
+										<label for='senha'>Senha</label>
+										<div class='input-group'>
+											<input
+												type='password'
+												class='form-control'
+												id='senha'
+												name='senha'
+												placeholder='Preencha campo com a sua senha'
+												value='{{ form.senha }}'
+												maxlength='100'
+											/>
+											<div class='input-group-append'>
+												<div class='input-group-text'>
+													<i 
+														class='fas fa-eye' 
+														id='visualizar' 
+														onclick='exibirSenha()'
+														style='cursor: pointer;'
+													></i>
+												</div>
+											</div>
+										</div>
+										<small 
+											class='form-text text-muted'
+										>
+											Não compartilhe seus dados com ninguém
+										</small>
+									</div>
+									<p class='form-text pr-4'>Não possui uma conta para o acesso? Entre em contato com o <a class='card-link' href='{% url "readmore" %}'>órgão responsável</a></p>
+
+									<div class='form-check'>
+										<input
+											type='checkbox'
+											id='habilitar'
+											name='habilitar'
+											class='form-check-input'
+											aria-hidden='true'
+										/>
+										<label for='habilitar' aria-hidden='true'>Habilitar Leitor</label>
+									</div>
+
+									<button type='button' class='btn btn-link' onclick='window.location.href=`{% url "forgot" %}`'>Esqueci minha senha</button>
+									<button type='submit' class='btn btn-success btn-lg btn-block'>Entrar</button>
+							{% endblock %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	const leitor = document.getElementById('habilitar');
+	const senha = document.getElementById('senha');
+	const visualizador = document.getElementById('visualizar');
+
+	function exibirSenha() {
+		if (senha.type === 'password') {
+    		senha.type = 'text';
+    		visualizador.className = 'fas fa-eye-slash';
+		} else {
+			senha.type = 'password';
+			visualizador.className = 'fas fa-eye';
+		}
+	}
+
+	$("input").keydown(function(evento) {
+        let texto = evento.key;
+
+        if (leitor.checked) {
+            if(/[a-zA-Z0-9\s\@\-\&\*\(\)\!]/.test(texto)) {
+                audio(`${texto}`);
+            }
+        }
+    });
+
+    $('form').on('submit', function() {
+        $('button[type="submit"]').attr('disabled', true);
+        $('button[type="button"]').attr('disabled', true);
+        return true;
+    });
+</script>
+</html>

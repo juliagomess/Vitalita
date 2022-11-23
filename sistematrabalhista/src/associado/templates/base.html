@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang='pt-br'>
+<head>
+	<meta charset='utf-8' />
+	<meta name='viewport' content='width=device-width, initial-scale=1' />
+	<link rel='stylesheet' type='text/css' href='{% static "bootstrap/css/bootstrap.min.css" %}' />
+	<link rel='stylesheet' type='text/css' href='{% static "css/base.css" %}' />
+	<link rel='stylesheet' type='text/css' href='{% static "css/list.css" %}' />
+	<link rel='stylesheet' type='text/css' href='{% static "css/form.css" %}' />
+	<script src='https://kit.fontawesome.com/50797efa34.js'></script>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+	{% if request.user.acessibilidade == 'leitor' %}
+		<script type='text/javascript' src='{% static "js/reader.js" %}'></script>
+	{% endif %}
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js'></script>
+	<script type='text/javascript' src='{% static "bootstrap/js/bootstrap.min.js" %}'></script>
+	<title>Associado</title>
+</head>
+<body>
+	<nav class='navbar navbar-expand-lg navbar-dark static-top'>
+		<a class='navbar-brand' href='{% url "home" %}'>
+			<img src='{{ request.user.foto }}' alt='{{ request.user.nome }}' class='d-inline-block align-top' />
+		</a>
+		<button type='button' class='navbar-toggler' data-toggle='collapse' data-target='#menu' aria-controls='menu' aria-hidden='true' aria-expanded='false'>
+			<span class='navbar-toggler-icon'></span>
+		</button>
+		<div class='collapse navbar-collapse flex-row-reverse' id='menu'>
+			<ul class='navbar-nav'>
+				<li class='nav-item'>
+					<a class='nav-link' href='{% url "resumelist" %}'>Currículo</a>
+				</li>
+				<li class='nav-item'>
+					<a class='nav-link' href='{% url "courselist" %}'>Cursos</a>
+				</li>
+				<li class='nav-item'>
+					<a class='nav-link' href='{% url "eventlist" %}'>Eventos</a>
+				</li>
+				<li class='nav-item'>
+					<a class='nav-link' href='{% url "gamelist" %}'>Jogos</a>
+				</li>
+				<li class='nav-item'>
+					<a class='nav-link' href='{% url "joblist" %}'>Vagas</a>
+				</li>
+				<li class='nav-item'>
+					<a class='nav-link' href='{% url "videolessonlist" %}'>Videoaulas</a>
+				</li>
+				<li class='nav-item'>
+					<a class='nav-link' href='{% url "logout" %}'>Sair</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<div class='container-fluid'>
+		{% block pagina %}
+		{% endblock %}
+	</div>
+</body>
+{% if request.user.acessibilidade == 'leitor' %}
+<script>
+	$("input, textarea").keydown(function(evento) {
+		let texto = evento.key;
+
+		if(/[a-zA-Z0-9\s\@\-\&\*\(\)\!]/.test(texto)) {
+			audio(`${texto}`);
+		}
+	});
+</script>
+{% endif %}
+</html>

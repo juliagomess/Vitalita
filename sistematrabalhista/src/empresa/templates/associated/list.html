@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+	<h3>Lista de Candidatos</h3>
+{% endblock %}
+
+{% block pagina %}
+<div class='list'>
+	{% if associados|length > 0 %}
+		<div class='input-group mb-3'>
+			<input type='text' class='form-control' placeholder='Pesquisar candidato pelo nome' />
+			<div class='input-group-append'>
+				<button class='btn btn-info' type='button' onclick='pesquisarAssociado()'>Pesquisar</button>
+			</div>
+		</div>
+		<div class='table-responsive-lg shadow'>
+			<table class='table table-bordered table-hover'>
+				<thead class='thead-dark'>
+					<th scope='col' class='text-center align-middle'>Foto</th>
+					<th scope='col' class='text-center align-middle'>Nome</th>
+					<th scope='col' class='text-center align-middle'>CPF</th>
+					<th scope='col' class='text-center align-middle'>Email</th>
+					<th scope='col' class='text-center align-middle'>Celular</th>
+					<th scope='col' class='text-center align-middle'>Opções</th>
+				</thead>
+				<tbody>
+					{% for associado in associados %}
+						<tr>
+							<td class='text-center align-middle'>
+								<img 
+									src='{{ associado.foto }}' 
+									alt='{{ associado.nome }}' 
+									class='d-inline-block align-top'
+								/>
+							</td>
+							<td class='text-center align-middle'>{{ associado.nome }}</td>
+							<td class='text-center align-middle'>{{ associado.cpf }}</td>
+							<td class='text-center align-middle'>{{ associado.email }}</td>
+							<td class='text-center align-middle'>{{ associado.celular }}</td>
+							<td class='text-center align-middle'>
+								<button 
+									type='button' 
+									class='btn btn-secondary btn-md btn-block'
+									onclick='window.location.href=`{% url "associatedread" associado.id %}`'
+								>
+									Ver detalhes
+								</button>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		<div class='empty'>
+			<div class='card shadow'>
+				<div class='card-body'>
+					<header>
+						<strong>Aviso</strong>
+						<i class='fas fa-times'></i>
+						<small>Ainda não existem candidatos cadastrados</small>
+					</header>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+</div>
+{% endblock %}

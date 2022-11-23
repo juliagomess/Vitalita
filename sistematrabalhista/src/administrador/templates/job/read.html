@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+	<h3>Detalhes da vaga</h3>
+{% endblock %}
+
+{% block pagina %}
+<div class='form'>
+	<div class='container'>
+		<div class='card shadow'>
+			<div class='card-body'>
+				<a
+					class='btn btn-link'
+					href='{% url "joblist" %}'
+				>
+					Voltar
+				</a>
+				<form>
+					<div class='container text-center'>
+						<img 
+							src='{{ form.logo }}'
+							class='img-fluid' 
+							alt='{{ form.titulo }'
+							style='height: 7em; width: 7em; border-radius: 50%;'
+						/>
+					</div>
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='razao_social'>Razão Social</label>
+							<input
+								type='text'
+								id='razao_social'
+								name='razao_social'
+								value='{{ form.razao_social }}'
+								class='form-control'
+								readonly
+							/>
+						</div>
+						<div class='col'>
+							<label for='email'>Email</label>
+							<input
+								type='email'
+								id='email'
+								name='email'
+								value='{{ form.email }}'
+								class='form-control'
+								readonly
+							/>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='titulo'>Titulo</label>
+							<input
+								type='text'
+								id='titulo'
+								name='titulo'
+								value='{{ form.titulo }}'
+								class='form-control'
+								readonly
+							/>
+						</div>
+						<div class='col'>
+							<label for='url'>URL</label>
+							<input
+								type='url'
+								id='url'
+								name='url'
+								value='{{ form.url }}'
+								class='form-control'
+								readonly
+							>
+						</div>
+						<div class='col'>
+							<label for='data_exp'>Data de expiração</label>
+							<input
+								type='date'
+								id='data_exp'
+								name='data_exp'
+								value='{{ form.data_exp|date:"Y-m-d" }}'
+								class='form-control'
+								readonly
+							/>
+						</div>
+					</div>
+
+					<div class='form-group pt-4'>
+						<label for='descricao'>Descrição</label>
+						<textarea
+							id='descricao'
+							name='descricao'
+							readonly
+							class='form-control'
+						>{{ form.descricao }}</textarea>
+					</div>
+
+					<div class='form-row pt-4 flex-row-reverse'>
+						<a
+							role='button'
+							class='btn btn-link'
+							href='{% url "jobpdf" form.id %}'
+						>
+							Gerar PDF
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

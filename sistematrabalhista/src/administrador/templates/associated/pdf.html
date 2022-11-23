@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang='pt'>
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1'/>
+    <title>{{ form.nome }}</title>
+    <style type='text/css'>
+		@page {
+			size: a4 portrait;
+			@frame footer {
+				-pdf-frame-content: footer;
+				left: 275pt;
+				top: 825pt;
+                width: 512pt;
+                height: 30pt;
+            }
+        }
+    </style>
+    <style type='text/css'>
+    	body {
+			font-family: Arial, Helvetica, sans-serif;
+		}
+		main.container {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		header {
+			display: flex;
+			flex-direction: column;
+		}
+		h1 {
+			font-size: 20px;
+			text-align: center;
+		}
+		.photo {
+			padding-top: 20px;
+			justify-content: center;
+			align-items: center;
+            text-align: center;
+		}
+		.photo img {
+			width: 195px;
+            height: 195px;
+            border: 0;
+		}
+		section.contact {
+			justify-content: left;
+            align-items: left;
+            text-align: left;
+		}
+		.contact h5 {
+			font-size: 18px;
+            font-weight: bold;
+            padding-left: 20px;
+		}
+		.contact ul {
+			font-size: 16px;
+			padding-left: 30px;
+		}
+		section.about {
+			justify-content: left;
+            align-items: left;
+            text-align: left;
+		}
+		.about h5 {
+			font-size: 18px;
+            font-weight: bold;
+            padding-left: 20px;
+		}
+		.about p {
+			font-size: 16px;
+			padding-left: 30px;
+		}
+		section.educational {
+			justify-content: left;
+            align-items: left;
+            text-align: left;
+		}
+		.educational h5 {
+			font-size: 18px;
+            font-weight: bold;
+            padding-left: 20px;
+		}
+		.educational p {
+			font-size: 16px;
+			padding-left: 30px;
+		}
+		section.courses {
+			justify-content: left;
+            align-items: left;
+            text-align: left;
+		}
+		.courses h5 {
+			font-size: 18px;
+            font-weight: bold;
+            padding-left: 20px;
+		}
+		.courses p {
+			font-size: 16px;
+			padding-left: 30px;
+		}
+		section.companies {
+			justify-content: left;
+            align-items: left;
+            text-align: left;
+		}
+		.companies h5 {
+			font-size: 18px;
+            font-weight: bold;
+            padding-left: 20px;
+		}
+		.companies p {
+			font-size: 16px;
+			padding-left: 30px;
+		}
+		section.works {
+			justify-content: left;
+            align-items: left;
+            text-align: left;
+		}
+		.works h5 {
+			font-size: 18px;
+            font-weight: bold;
+            padding-left: 20px;
+		}
+		.works p {
+			font-size: 16px;
+			padding-left: 30px;
+		}
+    </style>
+</head>
+<body>
+	<main class='container'>
+		<header>
+			<div class='photo'>
+				<img src='{{ form.foto }}' alt='{{ form.nome }}' />
+			</div>
+			<h1>{{ form.nome }}</h1>
+			<hr>
+		</header>
+
+		<section class='contact'>
+			<h5>Dados básicos</h5>
+
+			<ul>
+				<li>Nome: {{ form.nome }}</li>
+				<li>CPF: {{ form.cpf }}</li>
+				<li>Data de nascimento: {{ form.data_nascimento }}</li>
+				<li>Email: {{ form.email }}</li>
+				<li>Celular: {{ form.celular }}</li>
+				<li>CEP: {{ form.cep }}</li>
+				<li>Numero da residência: {{ form.numero }}</li>
+				<li>Portador de necessidades especiais: {% if form.pcd == 1 %} Sim {% else %} Não {%endif %}</li>
+			</ul>
+		</section>
+
+		{% if form.outras_informacoes != '' %}
+			<section class='about'>
+				<h5>Outras informações</h5>
+				<p>{{ form.outras_informacoes }}</p>
+			</section>
+		{% endif %}
+
+		{% if form.instituicao_ensino != '' %}
+			<section class='educational'>
+				<h5>Instituições de ensino</h5>
+				<p>{{ form.instituicao_ensino }}</p>
+			</section>
+		{% endif %}
+
+		{% if form.curso_extra != '' %}
+			<section class='courses'>
+				<h5>Cursos extras</h5>
+				<p>{{ form.curso_extra }}</p>
+			</section>
+		{% endif %}
+
+		{% if form.empresa_trabalhada != '' %}
+			<section class='companies'>
+				<h5>Empresas trabalhadas</h5>
+				<p>{{ form.empresa_trabalhada }}</p>
+			</section>
+		{% endif %}
+
+		{% if form.cargo_ocupado != '' %}
+			<section class='works'>
+				<h5>Cargos ocupados</h5>
+				<p>{{ form.cargo_ocupado }}</p>
+			</section>
+		{% endif %}
+
+		<div id='footer'>
+            Página <pdf:pagenumber> de <pdf:pagecount>
+        </div>
+	</main>
+</body>
+</html>

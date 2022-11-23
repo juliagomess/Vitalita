@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block pagina %}
+<div class='list'>
+	{% if curriculos|length > 0 %}
+		<div class='input-group'>
+			<button class='btn btn-success' type='button' onclick='window.location.href=`{% url "resumecreate" %}`'>Novo currículo</button>
+		</div>
+		<ul class='row pt-4'>
+			{% for curriculo in curriculos %}
+				<li class='col-sm-2 pb-4'>
+					<div class='card shadow'>
+						<div class='card-body'>
+							<h5 class='card-title text-center'>Curriculo {{ forloop.counter }}</h5> 
+							<p class='card-text text-center'>{{ curriculo.created_at|date:"d-m-Y" }}</p>
+							<button 
+								type='button'
+								class='btn btn-secondary btn-block'
+								onclick='window.location.href=`{% url "resumeedit" curriculo.id %}`'
+							>
+								Acessar
+							</button>
+						</div>
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<div class='empty' style='cursor: pointer;' onclick='window.location.href=`{% url "resumecreate" %}`'>
+			<div class='card shadow'>
+				<div class='card-body'>
+					<header>
+						<strong>Aviso</strong>
+						<i class='fas fa-times'></i>
+						<small>Ainda não existem currículos cadastrados</small>
+					</header>
+					<button class='btn btn-success btn-lg btn-block'>Novo Currículo</button>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+</div>
+{% endblock %}

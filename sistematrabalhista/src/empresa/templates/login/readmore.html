@@ -1,0 +1,16 @@
+{% extends 'login/index.html' %}
+{% load static %}
+
+{% block formulario %}
+<div>
+	<img src='{% static "assets/newuser.svg" %}' class='rounded mx-auto d-block' alt='' />
+
+	<p class='text-muted text-justify'>
+		O acesso ao sistema só é permitido aos associados e colaboradores. Se deseja acessar o sistema entre em contato com o <a class='card-link' href='https://www.extcomp.com/' target='_blank'>órgão responsável</a> 
+	</p>
+
+	<div class='form-row'>
+		<button class='btn btn-link' onclick='window.location.href=`{% url "login" %}`'>Voltar</button>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,501 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+	<h3>Formulário de Associado</h3>
+{% endblock %}
+
+{% block pagina %}
+
+{% if erro is not None %}
+<div class='error-overlay' onclick='this.style.display="none"'>
+	<div class='container'>
+		<div class='card'>
+			<div class='card-body'>
+				<h5 class='text-center'>Aviso</h5>
+				<button
+					type='button'
+					class='close'
+					aria-label='Fechar'
+				>
+					<span aria-hidden='true'>&times;</span>
+				</button>
+				<hr />
+				<p>{{ erro }}</p>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+{% if request.user.acessibilidade != 'leitor' %}
+<div id='erro_endereco' class='error-overlay' style='display: none;' onclick='this.style.display="none"'>
+	<div class='container'>
+		<div class='card'>
+			<div class='card-body'>
+				<h5 id='titulo_endereco' class='text-center'></h5>
+				<button type='button' class='close' aria-label='Fechar'>
+					<span aria-hidden='true'>&times;</span>
+				</button>
+				<hr />
+				<p id='rua'></p>
+				<p id='bairro'></p>
+				<p id='cidade'></p>
+				<p id='estado'></p>
+				<p id='erro'></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id='erro_documento' class='error-overlay' style='display: none;' onclick='this.style.display="none"'>
+	<div class='container'>
+		<div class='card'>
+			<div class='card-body'>
+				<h5 id='titulo_documento' class='text-center'></h5>
+				<button type='button' class='close' aria-label='Fechar'>
+					<span aria-hidden='true'>&times;</span>
+				</button>
+				<hr />
+				<p id='mensagem_documento'></p>
+			</div>
+		</div>
+	</div>
+</div>
+{% else %}
+<span 
+	id='erro_leitor'
+	style='
+		visibility: none;
+		display: none;
+	'
+></span>
+{% endif %}
+
+<div class='form'>
+	<div class='container'>
+		<div class='card shadow'>
+			<div class='card-body'>
+				<form method='post' action='.' autocomplete='off' enctype='multipart/form-data' onsubmit='return validarDados()'>
+					{% csrf_token %}
+
+					{% if editar is True %}
+						<input aria-hidden='true' id='endereco_valido' name='endereco_valido' type='hidden' value='sim' />
+						<input aria-hidden='true' id='documento_valido' name='documento_valido' type='hidden' value='sim' />
+					{% else %}
+						<input aria-hidden='true' id='endereco_valido' name='endereco_valido' type='hidden' value='' />
+						<input aria-hidden='true' id='documento_valido' name='documento_valido' type='hidden' value='' />
+					{% endif %}
+
+					<header class='row'>
+						{% if editar is True %}
+							<div class='col'>
+								<img 
+									src='{{ form.foto.url }}'
+									class='img-fluid' 
+									alt='Prévia'
+									id='previa-foto'
+								/>
+							</div>
+						{% else %}
+							<div class='col'>
+								<img 
+									src='{% static "assets/empty-img.png" %}'
+									class='img-fluid' 
+									alt='Prévia'
+									id='previa-foto'
+								/>
+							</div>
+						{% endif %}
+						<div class='col'>
+							<div class='input-group mb-3'>
+								<div class='input-group-prepend'>
+									<label class='input-group-text'>Foto do associado</label>
+								</div>
+								<div class='custom-file'>
+									<input 
+										type='file'
+										class='custom-file-input'
+										accept='image/*'
+										id='foto' 
+										name='foto'
+									/>
+									<label class='custom-file-label'>Escolher foto</label>
+								</div>
+							</div>
+						</div>
+					</header>
+
+					<div class='form-row'>
+						<div class='col'>
+							<label for='nome'>Nome</label>
+							<input
+								type='text'
+								id='nome'
+								name='nome'
+								value='{{ form.nome }}'
+								class='form-control'
+								required
+								placeholder='Preencha com o nome do associado'
+								maxlength='45'
+							/>
+						</div>
+						<div class='col'>
+							<label for='data_nascimento'>Data de nascimento</label>
+							{% if erro is not None %}
+								<input
+									type='date'
+									id='data_nascimento'
+									name='data_nascimento'
+									required
+									class='form-control'
+									value='{{ form.data_nascimento }}'
+								/>
+							{% else %}
+								<input
+									type='date'
+									id='data_nascimento'
+									name='data_nascimento'
+									required
+									class='form-control'
+									value='{{ form.data_nascimento|date:"Y-m-d" }}'
+								/>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='cpf'>CPF</label>
+							{% if editar is True %}
+								<input
+									type='text'
+									id='cpf'
+									name='cpf'
+									value='{{ form.cpf }}'
+									class='form-control'
+									required
+									placeholder='Preencha com o CPF do associado'
+									maxlength='14'
+									onkeypress='mascaraCPF(this)'
+									readonly
+									pattern='[0-9]{3}[\.][0-9]{3}[\.][0-9]{3}[-][0-9]{2}'
+									onblur='validarCPF(this)' 
+								/>
+							{% else %}
+								<input
+									type='text'
+									id='cpf'
+									name='cpf'
+									value='{{ form.cpf }}'
+									class='form-control'
+									required
+									placeholder='Preencha com o CPF do associado'
+									maxlength='14'
+									onkeypress='mascaraCPF(this)'
+									pattern='[0-9]{3}[\.][0-9]{3}[\.][0-9]{3}[-][0-9]{2}'
+									onblur='validarCPF(this)'  
+								/>
+							{% endif %}
+						</div>
+						<div class='col'>
+							<label for='celular'>Celular</label>
+							<input
+								type='text'
+								id='celular'
+								name='celular'
+								value='{{ form.celular }}'
+								class='form-control'
+								required
+								placeholder='Preencha com o celular do associado'
+								maxlength='15'
+								pattern='[\(][0-9]{2}[\)][\s]{1}[0-9]{5}[-][0-9]{4}' 
+								onkeypress='mascaraCelular(this)'
+							/>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='email'>Email</label>
+							<input
+								type='email'
+								id='email'
+								name='email'
+								value='{{ form.email }}'
+								class='form-control'
+								required
+								placeholder='Preencha com a email do associado'
+								maxlength='45'
+							/>
+						</div>
+						<div class='col'>
+							<label for='senha'>Senha</label>
+							<div class='input-group'>
+								{% if editar is True %}
+									<input
+										type='password'
+										id='senha'
+										name='senha'
+										value='{{ form.senha }}'
+										class='form-control'
+										placeholder='Preencha com a senha do associado'
+										maxlength='100'
+									/>
+								{% else %}
+									<input
+										type='password'
+										id='senha'
+										name='senha'
+										value='{{ form.senha }}'
+										class='form-control'
+										required
+										placeholder='Preencha com a senha do associado'
+										maxlength='100'
+									/>
+								{% endif %}
+								<div class='input-group-append'>
+									<div class='input-group-text'>
+										<i 
+											class='fas fa-eye' 
+											id='visualizar' 
+											onclick='exibirSenha()'
+											style='cursor: pointer;'
+										></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='cep'>CEP</label>
+							<input
+								type='text'
+								id='cep'
+								name='cep'
+								value='{{ form.cep }}'
+								class='form-control'
+								required
+								placeholder='Preencha com o CEP do associado'
+								maxlength='10'
+								pattern='[0-9]{2}[\.][0-9]{3}[-][0-9]{3}'
+								onkeypress='mascaraCEP(this)'
+								onblur='validarCEP(this)'  
+							/>
+						</div>
+						<div class='col'>
+							<label for='numero'>Número</label>
+							<input
+								type='text'
+								id='numero'
+								name='numero'
+								value='{{ form.numero }}'
+								class='form-control'
+								required
+								placeholder='Preencha com o número do associado'
+								maxlength='5'
+								pattern='[0-9]*' 
+							/>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label>Portador de necessidades especiais?</label> 
+							<div class='form-check'>
+								{% if form.pcd is True %}
+									<input
+										type='checkbox'
+										id='pcd'
+										name='pcd'
+										class='form-check-input'
+										value='sim'
+										checked
+										onclick='marcarPCD()'
+									/>
+									<input 
+										id='pcd_oculto'
+										name='pcd' 
+										type='hidden' 
+										value='nao'  
+										disabled
+									/>
+								{% else %}
+									<input
+										type='checkbox'
+										id='pcd'
+										name='pcd'
+										class='form-check-input'
+										value='sim'
+										onclick='marcarPCD()'
+									/>
+									<input 
+										id='pcd_oculto'
+										name='pcd' 
+										type='hidden' 
+										value='nao' 
+									/>
+								{% endif %}
+								<label for='pcd'>Sim</label>
+							</div>
+						</div>
+						<div class='col'>
+							<label for='outras_informacoes'>Outras informações</label>
+							<button 
+								type='button' 
+								id='tooltip' 
+								class='btn btn-link'
+								data-toggle='tooltip'
+								data-placement='right'
+								title='Limite de 255 caracteres'
+								style='margin-top: -0.25em; color: #000' 
+							>
+								<i class='fa fa-info-circle'></i>
+							</button>
+							<textarea
+								id='outras_informacoes'
+								name='outras_informacoes'
+								class='form-control'
+								placeholder='Preencha com alguma informação adicional do associado'
+								maxlength='255'
+							>{{ form.outras_informacoes }}</textarea>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='acessibilidade'>Acessibilidade</label>
+							<div class='row'>
+								<div class='form-check ml-4'>
+									{% if form.acessibilidade == 'leitor' %}
+										<input
+											type='radio'
+											id='leitor'
+											name='acessibilidade'
+											class='form-check-input'
+											checked
+											value='leitor'
+										/>
+									{% else %}
+										<input
+											type='radio'
+											id='leitor'
+											name='acessibilidade'
+											value='leitor'
+											class='form-check-input'
+										/>
+									{% endif %}
+									<label class='form-check-label' for='leitor'>Leitor de tela</label>
+								</div>
+								<div class='form-check ml-4'>
+									{% if form.acessibilidade == 'nenhum' %}
+										<input
+											type='radio'
+											id='nenhum'
+											name='acessibilidade'
+											class='form-check-input'
+											checked
+											value='nenhum'
+										/>
+									{% else %}
+										<input
+											type='radio'
+											id='nenhum'
+											name='acessibilidade'
+											value='nenhum'
+											class='form-check-input'
+										/>
+									{% endif %}
+									<label class='form-check-label' for='nenhum'>Nenhum</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<footer>
+						<button
+							type='button'
+							class='btn btn-danger btn-lg'
+							onclick='window.location.href=`{% url "associatedlist" %}`'
+						>
+							Cancelar
+						</button>
+						<button 
+							type='submit' 
+							id='salvar'
+							class='btn btn-success btn-lg ml-4'
+						>
+							Salvar
+						</button>
+					</footer>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script type='text/javascript'>
+	const botao = document.getElementById('foto');
+	const imagem = document.getElementById('previa-foto');
+	const senha = document.getElementById('senha');
+	const visualizador = document.getElementById('visualizar');
+
+	$(document).ready(function () {
+		$('[data-toggle="tooltip"]').tooltip();
+	});
+
+	function exibirSenha() {
+		if (senha.type === 'password') {
+    		senha.type = 'text';
+    		visualizador.className = 'fas fa-eye-slash';
+		} else {
+			senha.type = 'password';
+			visualizador.className = 'fas fa-eye';
+		}
+	}
+
+	botao.addEventListener('change', function() {
+		const arquivo = this.files[0];
+		
+		if (arquivo) {
+			const leitor = new FileReader();
+
+			leitor.addEventListener('load', function() {
+				imagem.setAttribute('src', this.result);	
+			});
+
+			leitor.readAsDataURL(arquivo);
+		}
+	});
+
+	function marcarPCD() {
+		if (document.getElementById('pcd').checked) {
+			document.getElementById('pcd_oculto').disabled = true;
+		} else {
+			document.getElementById('pcd_oculto').disabled = false;
+		}
+	}
+
+	$('#cpf').inputmask({
+		mask: '999.999.999-99',
+		showMaskOnHover: false,
+    	showMaskOnFocus: false,
+    	oncomplete: function(){ },
+	});
+
+	$('#celular').inputmask({
+		mask: '(99) 99999-9999',
+		showMaskOnHover: false,
+    	showMaskOnFocus: false,
+    	oncomplete: function(){ },
+	});
+
+	$('#cep').inputmask({
+		mask: '99.999-999',
+		showMaskOnHover: false,
+    	showMaskOnFocus: false,
+    	oncomplete: function(){ },
+	});
+</script>
+{% endblock %}

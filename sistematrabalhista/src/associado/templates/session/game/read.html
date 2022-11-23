@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block pagina %}
+<div class='form'>
+	<div class='container'>
+		<div class='card shadow'>
+			<header>
+				<img
+					src='{{ form.logo }}'
+					alt='{{ form.titulo }}'
+					class='card-img-top'
+				/>
+			</header>
+			<div class='card-body text-center'>
+				<h5 class='card-title text-center'>{{ form.titulo }}</h5>
+				<p class='card-text'>{{ form.descricao }}</p>
+				<a
+					class='btn btn-link text-info'
+					href='{% url "gamelist" %}'
+				>
+					Voltar
+				</a>
+				<button 
+					class='btn btn-info btn-lg btn-block w-50 mx-auto'
+					type='button'
+					onclick='jogar(`{{ form.url }}`)' 
+				>
+					Acessar jogo
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type='text/javascript'>
+	function jogar(url) {
+		window.open(url + '?password=ciapd', '_blank');
+	}
+</script>
+{% endblock %}

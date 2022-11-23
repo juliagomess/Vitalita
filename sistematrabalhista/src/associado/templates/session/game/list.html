@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block pagina %}
+<div class='list'>
+	{% if jogos|length > 0 %}
+		<ul class='row'>
+			{% for jogo in jogos %}
+				<li class='col-sm-2 pb-4'>
+					<div class='card shadow'>
+						<img 
+							src='{{ jogo.logo }}'
+							alt='{{ jogo.titulo }}'
+							class='card-img-top'
+						/>
+						<div class='card-body'>
+							<h5 class='card-title text-center'>{{ jogo.titulo }}</h5>
+							<p class='card-text'>{{ jogo.descricao }}</p>
+							<button 
+								type='button'
+								class='btn btn-secondary btn-block'
+								onclick='window.location.href=`{% url "gameread" jogo.id %}`'
+							>
+								Acessar
+							</button>
+						</div>
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<div class='empty'>
+			<div class='card shadow'>
+				<div class='card-body'>
+					<header>
+						<strong>Aviso</strong>
+						<i class='fas fa-times'></i>
+						<small>Ainda não existem jogos cadastrados</small>
+					</header>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+</div>
+{% endblock %}

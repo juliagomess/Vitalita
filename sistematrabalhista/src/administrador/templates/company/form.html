@@ -1,0 +1,469 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+	<h3>Formulário de Empresa</h3>
+{% endblock %}
+
+{% block pagina %}
+
+{% if erro is not None %}
+<div class='error-overlay' onclick='this.style.display="none"'>
+	<div class='container'>
+		<div class='card'>
+			<div class='card-body'>
+				<h5 class='text-center'>Aviso</h5>
+				<button
+					type='button'
+					class='close'
+					aria-label='Fechar'
+				>
+					<span aria-hidden='true'>&times;</span>
+				</button>
+				<hr />
+				<p>{{ erro }}</p>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+{% if request.user.acessibilidade !=  'leitor' %}
+<div id='erro_endereco' class='error-overlay' style='display: none;' onclick='this.style.display="none"'>
+	<div class='container'>
+		<div class='card'>
+			<div class='card-body'>
+				<h5 id='titulo_endereco' class='text-center'></h5>
+				<button type='button' class='close' aria-label='Fechar'>
+					<span aria-hidden='true'>&times;</span>
+				</button>
+				<hr />
+				<p id='rua'></p>
+				<p id='bairro'></p>
+				<p id='cidade'></p>
+				<p id='estado'></p>
+				<p id='erro'></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id='erro_documento' class='error-overlay' style='display: none;' onclick='this.style.display="none"'>
+	<div class='container'>
+		<div class='card'>
+			<div class='card-body'>
+				<h5 id='titulo_documento' class='text-center'></h5>
+				<button type='button' class='close' aria-label='Fechar'>
+					<span aria-hidden='true'>&times;</span>
+				</button>
+				<hr />
+				<p id='mensagem_documento'></p>
+			</div>
+		</div>
+	</div>
+</div>
+{% else %}
+<span 
+	id='erro_leitor'
+	style='
+		visibility: none;
+		display: none;
+	'
+></span>
+{% endif %}
+
+<div class='form'>
+	<div class='container'>
+		<div class='card shadow'>
+			<div class='card-body'>
+				<form method='post' action='.' autocomplete='off' enctype='multipart/form-data' onsubmit='return validarDados()'>
+					{% csrf_token %}
+
+					{% if editar is True %}
+						<input aria-hidden='true' id='endereco_valido' name='endereco_valido' type='hidden' value='sim' />
+						<input aria-hidden='true' id='documento_valido' name='documento_valido' type='hidden' value='sim' />
+					{% else %}
+						<input aria-hidden='true' id='endereco_valido' name='endereco_valido' type='hidden' value='' />
+						<input aria-hidden='true' id='documento_valido' name='documento_valido' type='hidden' value='' />
+					{% endif %}
+
+					<header class='row'>
+						{% if editar is True %}
+							<div class='col'>
+								<img 
+									src='{{ form.logo.url }}'
+									class='img-fluid' 
+									alt='Prévia'
+									id='previa-logo'
+								/>
+							</div>
+							<div class='col'>
+								<img 
+									src='{{ form.foto.url }}'
+									class='img-fluid' 
+									alt='Prévia'
+									id='previa-foto'
+								/>
+							</div>
+						{% else %}
+							<div class='col'>
+								<img 
+									src='{% static "assets/empty-img.png" %}'
+									class='img-fluid' 
+									alt='Prévia'
+									id='previa-logo'
+								/>
+							</div>
+							<div class='col'>
+								<img 
+									src='{% static "assets/empty-img.png" %}'
+									class='img-fluid' 
+									alt='Prévia'
+									id='previa-foto'
+								/>
+							</div>
+						{% endif %}
+					</header>
+
+					<header class='row pt-4'>
+						<div class='col'>
+							<div class='input-group mb-3'>
+								<div class='input-group-prepend'>
+									<label class='input-group-text'>Logo do empresa</label>
+								</div>
+								<div class='custom-file'>
+									<input 
+										type='file'
+										class='custom-file-input'
+										accept='image/*'
+										id='logo' 
+										name='logo'
+									/>
+									<label class='custom-file-label'>Escolher logo</label>
+								</div>
+							</div>
+						</div>
+						<div class='col'>
+							<div class='input-group mb-3'>
+								<div class='input-group-prepend'>
+									<label class='input-group-text'>Foto do contato</label>
+								</div>
+								<div class='custom-file'>
+									<input 
+										type='file'
+										class='custom-file-input'
+										accept='image/*'
+										id='foto' 
+										name='foto'
+									/>
+									<label class='custom-file-label'>Escolher foto</label>
+								</div>
+							</div>
+						</div>
+					</header>
+
+					<div class='form-row'>
+						<div class='col'>
+							<label for='razao_social'>Razão social</label>
+							<input
+								type='text'
+								id='razao_social'
+								name='razao_social'
+								value='{{ form.razao_social }}'
+								class='form-control'
+								required
+								placeholder='Preencha com a razão social da empresa'
+								maxlength='45'
+							/>
+						</div>
+						<div class='col'>
+							<label for='cnpj'>CNPJ</label>
+							{% if editar is True %}
+								<input
+									type='text'
+									id='cnpj'
+									name='cnpj'
+									value='{{ form.cnpj }}'
+									class='form-control'
+									required
+									placeholder='Preencha com o CNPJ da empresa'
+									maxlength='18'
+									onkeypress='mascaraCNPJ(this)'
+									readonly
+									pattern='[0-9]{2}[\.][0-9]{3}[\.][0-9]{3}[\/][0-9]{4}[-][0-9]{2}'
+									onblur='validarCNPJ(this)' 
+								/>
+							{% else %}
+								<input
+									type='text'
+									id='cnpj'
+									name='cnpj'
+									value='{{ form.cnpj }}'
+									class='form-control'
+									required
+									placeholder='Preencha com o CNPJ da empresa'
+									maxlength='18'
+									pattern='[0-9]{2}[\.][0-9]{3}[\.][0-9]{3}[\/][0-9]{4}[-][0-9]{2}'
+									onkeypress='mascaraCNPJ(this)'
+									onblur='validarCNPJ(this)' 
+								/>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='nome_contato'>Nome do contato</label>
+							<input
+								type='text'
+								id='nome_contato'
+								name='nome_contato'
+								value='{{ form.nome_contato }}'
+								class='form-control'
+								required
+								placeholder='Preencha com o nome do contato'
+								maxlength='45'
+							/>
+						</div>
+						<div class='col'>
+							<label for='telefone'>Telefone</label>
+							<input
+								type='text'
+								id='telefone'
+								name='telefone'
+								value='{{ form.telefone }}'
+								class='form-control'
+								required
+								placeholder='Preencha com o telefone da empresa'
+								maxlength='14'
+								pattern='[\(][0-9]{2}[\)][\s]{1}[0-9]{4}[-][0-9]{4}' 
+								onkeypress='mascaraTelefone(this)'
+							/>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='email'>Email</label>
+							<input
+								type='email'
+								id='email'
+								name='email'
+								value='{{ form.email }}'
+								class='form-control'
+								required
+								placeholder='Preencha com a email da empresa'
+								maxlength='45'
+							/>
+						</div>
+						<div class='col'>
+							<label for='senha'>Senha</label>
+							<div class='input-group'>
+								{% if editar is True %}
+									<input
+										type='password'
+										id='senha'
+										name='senha'
+										value='{{ form.senha }}'
+										class='form-control'
+										placeholder='Preencha com a senha da empresa'
+										maxlength='100'
+									/>
+								{% else %}
+									<input
+										type='password'
+										id='senha'
+										name='senha'
+										value='{{ form.senha }}'
+										class='form-control'
+										required
+										placeholder='Preencha com a senha da empresa'
+										maxlength='100'
+									/>
+								{% endif %}
+								<div class='input-group-append'>
+									<div class='input-group-text'>
+										<i 
+											class='fas fa-eye' 
+											id='visualizar' 
+											onclick='exibirSenha()'
+											style='cursor: pointer;'
+											></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='cep'>CEP</label>
+							<input
+								type='text'
+								id='cep'
+								name='cep'
+								value='{{ form.cep }}'
+								class='form-control'
+								required
+								placeholder='Preencha com o CEP da empresa'
+								maxlength='10'
+								pattern='[0-9]{2}[\.][0-9]{3}[-][0-9]{3}'
+								onkeypress='mascaraCEP(this)'
+								onblur='validarCEP(this)'  
+							/>
+						</div>
+						<div class='col'>
+							<label for='numero'>Número</label>
+							<input
+								type='text'
+								id='numero'
+								name='numero'
+								value='{{ form.numero }}'
+								class='form-control'
+								required
+								placeholder='Preencha com o número da empresa'
+								maxlength='5'
+								pattern='[0-9]*' 
+							/>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='acessibilidade'>Acessibilidade</label>
+							<div class='row'>
+								<div class='form-check ml-4'>
+									{% if form.acessibilidade == 'leitor' %}
+										<input
+											type='radio'
+											id='leitor'
+											name='acessibilidade'
+											class='form-check-input'
+											checked
+											value='leitor'
+										/>
+									{% else %}
+										<input
+											type='radio'
+											id='leitor'
+											name='acessibilidade'
+											value='leitor'
+											class='form-check-input'
+										/>
+									{% endif %}
+									<label class='form-check-label' for='leitor'>Leitor de tela</label>
+								</div>
+								<div class='form-check ml-4'>
+									{% if form.acessibilidade == 'nenhum' %}
+										<input
+											type='radio'
+											id='nenhum'
+											name='acessibilidade'
+											class='form-check-input'
+											checked
+											value='nenhum'
+										/>
+									{% else %}
+										<input
+											type='radio'
+											id='nenhum'
+											name='acessibilidade'
+											value='nenhum'
+											class='form-check-input'
+										/>
+									{% endif %}
+									<label class='form-check-label' for='nenhum'>Nenhum</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<footer>
+						<button
+							type='button'
+							class='btn btn-danger btn-lg'
+							onclick='window.location.href=`{% url "companylist" %}`'
+						>
+							Cancelar
+						</button>
+						<button 
+							type='submit'
+							id='salvar' 
+							class='btn btn-success btn-lg ml-4'
+						>
+							Salvar
+						</button>
+					</footer>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script type='text/javascript'>
+	const botaoLogo = document.getElementById('logo');
+	const botaoFoto = document.getElementById('foto');
+	const logo = document.getElementById('previa-logo');
+	const imagem = document.getElementById('previa-foto');
+	const senha = document.getElementById('senha');
+	const visualizador = document.getElementById('visualizar');
+
+	function exibirSenha() {
+		if (senha.type === 'password') {
+    		senha.type = 'text';
+    		visualizador.className = 'fas fa-eye-slash';
+		} else {
+			senha.type = 'password';
+			visualizador.className = 'fas fa-eye';
+		}
+	}
+
+	botaoLogo.addEventListener('change', function() {
+		const arquivo = this.files[0];
+		
+		if (arquivo) {
+			const leitor = new FileReader();
+
+			leitor.addEventListener('load', function() {
+				logo.setAttribute('src', this.result);	
+			});
+
+			leitor.readAsDataURL(arquivo);
+		}
+	});
+
+	botaoFoto.addEventListener('change', function() {
+		const arquivo = this.files[0];
+		
+		if (arquivo) {
+			const leitor = new FileReader();
+
+			leitor.addEventListener('load', function() {
+				imagem.setAttribute('src', this.result);	
+			});
+
+			leitor.readAsDataURL(arquivo);
+		}
+	});
+
+	$('#cnpj').inputmask({
+		mask: '99.999.999/9999-99',
+		showMaskOnHover: false,
+    	showMaskOnFocus: false,
+    	oncomplete: function(){ },
+	});
+
+	$('#telefone').inputmask({
+		mask: '(99) 9999-9999',
+		showMaskOnHover: false,
+    	showMaskOnFocus: false,
+    	oncomplete: function(){ },
+	});
+
+	$('#cep').inputmask({
+		mask: '99.999-999',
+		showMaskOnHover: false,
+    	showMaskOnFocus: false,
+    	oncomplete: function(){ },
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,35 @@
+.list {
+	padding-top: 5em;
+}
+
+.list ul {
+	list-style: none;
+}
+
+.list .empty {
+	margin: auto;
+	width: 100%;
+	max-width: 35em;
+}
+
+.list .empty header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.list .empty header strong {
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+.list .empty header i {
+	font-size: 4em;
+	color: #F02A00;
+}
+
+.list .empty header small {
+	font-size: 1.1em;
+	margin-bottom: 0.938em;
+}

@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+	<h3>Formulário de Evento</h3>
+{% endblock %}
+
+{% block pagina %}
+
+{% if erro is not None %}
+<div class='error-overlay' onclick='this.style.display="none"'>
+	<div class='container'>
+		<div class='card'>
+			<div class='card-body'>
+				<h5 class='text-center'>Aviso</h5>
+				<button
+					type='button'
+					class='close'
+					aria-label='Fechar'
+				>
+					<span aria-hidden='true'>&times;</span>
+				</button>
+				<hr />
+				<p>{{ erro }}</p>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+<div class='form'>
+	<div class='container'>
+		<div class='card shadow'>
+			<div class='card-body'>
+				<form method='post' action='.' autocomplete='off' enctype='multipart/form-data'>
+					{% csrf_token %}
+
+					<header class='row'>
+						<div class='col'>
+							{% if editar is True %}
+								<img 
+									src='{{ form.logo.url }}'
+									class='img-fluid' 
+									alt='Prévia'
+									id='previa'
+								/>
+							{% else %}
+								<img
+									src='{% static "assets/empty-img.png" %}'
+									class='img-fluid'
+									id='previa'
+								/>
+							{% endif %}
+						</div>
+						<div class='col'>
+							<div class='input-group mb-3'>
+								<div class='input-group-prepend'>
+									<label class='input-group-text'>Logo do evento</label>
+								</div>
+								<div class='custom-file'>
+									<input 
+										type='file'
+										class='custom-file-input'
+										accept='image/*'
+										id='logo' 
+										name='logo'
+									/>
+									<label class='custom-file-label'>Escolher logo</label>
+								</div>
+							</div>
+						</div>
+					</header>
+
+					<div class='form-row'>
+						<div class='col'>
+							<label for='titulo'>Título</label>
+							<input
+								type='text'
+								id='titulo'
+								name='titulo'
+								value='{{ form.titulo }}'
+								class='form-control'
+								required
+								placeholder='Preencha com o título do evento'
+								maxlength='50'
+							/>
+						</div>
+						<div class='col'>
+							<label for='url'>URL</label>
+							<input
+								type='url'
+								id='url'
+								name='url'
+								value='{{ form.url }}'
+								class='form-control'
+								maxlength='100'
+								placeholder='Preencha com a URL do evento'
+							>
+						</div>
+						<div class='col'>
+							<label for='data_exp'>Data de expiração</label>
+							{% if erro is not None %}
+								<input
+									type='date'
+									id='data_exp'
+									name='data_exp'
+									value='{{ form.data_exp }}'
+									class='form-control'
+									required
+								/>
+							{% else %}
+								<input
+									type='date'
+									id='data_exp'
+									name='data_exp'
+									value='{{ form.data_exp|date:"Y-m-d" }}'
+									class='form-control'
+									required
+								/>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class='form-group' style='margin-top: 1.5em;'>
+						<label for='descricao'>Descrição</label>
+						<button 
+							type='button' 
+							id='tooltip' 
+							class='btn btn-link'
+							data-toggle='tooltip'
+							data-placement='right'
+							title='Limite de 255 caracteres'
+							style='margin-top: -0.25em; color: #000' 
+						>
+							<i class='fa fa-info-circle'></i>
+						</button>
+						<textarea
+							id='descricao'
+							name='descricao'
+							placeholder='Preencha com a descrição do evento'
+							required
+							maxlength='255'
+							class='form-control'
+						>{{ form.descricao }}</textarea>
+					</div>
+
+					<footer>
+						<button
+							type='button'
+							class='btn btn-danger btn-lg'
+							onclick='window.location.href=`{% url "eventlist" %}`'
+						>
+							Cancelar
+						</button>
+						<button 
+							type='submit' 
+							class='btn btn-success btn-lg ml-4'
+						>
+							Salvar
+						</button>
+					</footer>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script type='text/javascript'>
+	const botao = document.getElementById('logo');
+	const imagem = document.getElementById('previa');
+
+	$(document).ready(function () {
+		$('[data-toggle="tooltip"]').tooltip();
+	});
+
+	botao.addEventListener('change', function() {
+		const arquivo = this.files[0];
+
+		if (arquivo) {
+			const leitor = new FileReader();
+
+			leitor.addEventListener('load', function() {
+				imagem.setAttribute('src', this.result);	
+			});
+
+			leitor.readAsDataURL(arquivo);
+		}
+	});
+
+	$('form').on('submit', function() {
+        $('button[type="submit"]').attr('disabled', true);
+        return true;
+    });
+</script>
+{% endblock %}

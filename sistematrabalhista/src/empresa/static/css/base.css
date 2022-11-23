@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+* {
+  	margin: 0;
+  	padding: 0;
+  	outline: 0;
+  	box-sizing: border-box;
+}
+
+html, body {
+  	height: 100%;
+  	width: 100%;
+  	background-color: #EEE;
+}
+
+body, input, button {
+  	font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+.screen-reader-effect {
+	border: 4px solid rgb(0, 191, 255, 0.7);
+	z-index: 3;
+}
+
+header.navbar {
+	color: #FFF;
+	background-color: #D10000;
+}
+
+header.navbar .navbar-brand img {
+	width: 3em;
+    height: 3em;
+    border-radius: 50%;
+    border: 2px solid #FFF;
+    background-color: #FFF;
+}
+
+.container-fluid .row aside {
+	background-color: #222;
+	min-height: 100vh;
+}
+
+.container-fluid .row aside header.sidebar-header {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.container-fluid .row aside header.sidebar-header i {
+	font-size: 1em;
+	color: #FFF;
+	margin-top: 1em;
+}
+
+.container-fluid .row aside nav strong {
+	color: #FFF;
+	font-size: 1em;
+}
+
+.container-fluid .row aside nav ul:not(:last-child) {
+	border-bottom: 1px solid rgb(225, 225, 225, 0.3);
+}
+
+.container-fluid .row aside nav ul li a {
+    color: #CCC;
+    display: block;
+    font-size: 1em;
+}
+
+.container-fluid .row aside nav ul li:hover {
+	background-color: #444;
+}

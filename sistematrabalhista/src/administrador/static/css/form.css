@@ -1,0 +1,81 @@
+.error-overlay {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.7);
+	transition: opacity 500ms;
+	z-index: 5;
+}
+
+.error-overlay .container .card {
+	max-width: 35em;
+	margin: 5em auto;
+}
+
+.error-overlay .container .card .card-body h5 {
+	color: #333;
+  	font-family: Tahoma, Arial, sans-serif;
+  	margin-bottom: 0.938em;
+  	font-weight: bold;
+}
+
+.error-overlay .container .card .card-body button {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+  	transition: all 200ms;
+  	font-size: 25px;
+}
+
+.error-overlay .container .card .card-body button:hover {
+  	color: #06D85F;
+}
+
+.error-overlay .container .card .card-body p {
+	font-size: 1em;
+  	color: #666;
+  	text-align: center;
+}
+
+.form {
+  padding-top: 5em;
+}
+
+.form form header {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.form form header img {
+	height: 7em;
+	width: 7em;
+	border-radius: 50%;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.form form textarea {
+  resize: none;
+}
+
+.form form footer {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: flex-end;
+}
+
+.form form button[type='submit'] {
+  margin-top: 1.5em;
+}
+
+.form form button[type='button'] {
+  margin-top: 1.5em;
+}

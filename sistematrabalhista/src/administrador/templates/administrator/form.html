@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+	<h3>Formulário de Administrador</h3>
+{% endblock %}
+
+{% block pagina %}
+
+{% if erro is not None %}
+<div class='error-overlay' onclick='this.style.display="none"'>
+	<div class='container'>
+		<div class='card'>
+			<div class='card-body'>
+				<h5 class='text-center'>Aviso</h5>
+				<button
+					type='button'
+					class='close'
+					aria-label='Fechar'
+				>
+					<span aria-hidden='true'>&times;</span>
+				</button>
+				<hr />
+				<p>{{ erro }}</p>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+<div class='form'>
+	<div class='container'>
+		<div class='card shadow'>
+			<div class='card-body'>
+				<form method='post' action='.' autocomplete='off' enctype='multipart/form-data'>
+					{% csrf_token %}
+
+					<header class='row'>
+						<div class='col'>
+							{% if editar is True %}
+								<img 
+									src='{{ form.foto.url }}'
+									class='img-fluid' 
+									alt='Prévia'
+									id='previa'
+								/>
+							{% else %}
+								<img
+									src='{% static "assets/empty-img.png" %}'
+									class='img-fluid'
+									id='previa'
+								/>
+							{% endif %}
+						</div>
+						<div class='col'>
+							<div class='input-group mb-3'>
+								<div class='input-group-prepend'>
+									<label class='input-group-text'>Foto do administrador</label>
+								</div>
+								<div class='custom-file'>
+									<input 
+										type='file'
+										class='custom-file-input'
+										accept='image/*'
+										id='foto' 
+										name='foto'
+									/>
+									<label class='custom-file-label'>Escolher foto</label>
+								</div>
+							</div>
+						</div>
+					</header>
+
+					<div class='form-row'>
+						<div class='col'>
+							<label for='nome'>Nome</label>
+							<input
+								type='text'
+								id='nome'
+								name='nome'
+								value='{{ form.nome }}'
+								class='form-control'
+								required
+								placeholder='Preencha com o nome do administrador'
+								maxlength='45'
+							/>
+						</div>
+						<div class='col'>
+							<label for='rf'>RF</label>
+							{% if editar is True %}
+								<input 
+									type='text'
+									id='rf'
+									name='rf'
+									class='form-control'
+									value='{{ form.rf }}'
+									required
+									readonly
+									placeholder='Preencha com o registro de funcionário'
+									maxlength='8' 
+								/>
+							{% else %}
+								<input 
+									type='text'
+									id='rf'
+									name='rf'
+									class='form-control'
+									value='{{ form.rf }}'
+									required
+									placeholder='Preencha com o registro de funcionário'
+									maxlength='8' 
+								/>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='email'>Email</label>
+							<input
+								type='email'
+								id='email'
+								name='email'
+								placeholder='Preencha campo com o email do administrador'
+								required
+								maxlenth='45'
+								class='form-control'
+								value='{{ form.email }}'
+							/>
+						</div>
+						<div class='col'>
+							<label for='senha'>Senha</label>
+							<div class='input-group'>
+								{% if editar is True %}
+									<input
+										type='password'
+										id='senha'
+										name='senha'
+										placeholder='Preencha campo com a senha do administrador'
+										maxlenth='100'
+										class='form-control'
+										value='{{ form.senha }}'
+									/>
+								{% else %}
+									<input
+										type='password'
+										id='senha'
+										name='senha'
+										placeholder='Preencha campo com a senha do administrador'
+										required
+										maxlenth='100'
+										class='form-control'
+										value='{{ form.senha }}'
+									/>
+								{% endif %}
+								<div class='input-group-append'>
+									<div class='input-group-text'>
+										<i 
+											class='fas fa-eye' 
+											id='visualizar' 
+											onclick='exibirSenha()'
+											style='cursor: pointer;'
+										></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='acessibilidade'>Acessibilidade</label>
+							<div class='row'>
+								<div class='form-check ml-4'>
+									{% if form.acessibilidade == 'leitor' %}
+										<input
+											type='radio'
+											id='leitor'
+											name='acessibilidade'
+											class='form-check-input'
+											checked
+											value='leitor'
+										/>
+									{% else %}
+										<input
+											type='radio'
+											id='leitor'
+											name='acessibilidade'
+											value='leitor'
+											class='form-check-input'
+										/>
+									{% endif %}
+									<label class='form-check-label' for='leitor'>Leitor de tela</label>
+								</div>
+								<div class='form-check ml-4'>
+									{% if form.acessibilidade == 'nenhum' %}
+										<input
+											type='radio'
+											id='nenhum'
+											name='acessibilidade'
+											class='form-check-input'
+											checked
+											value='nenhum'
+										/>
+									{% else %}
+										<input
+											type='radio'
+											id='nenhum'
+											name='acessibilidade'
+											value='nenhum'
+											class='form-check-input'
+										/>
+									{% endif %}
+									<label class='form-check-label' for='nenhum'>Nenhum</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<footer>
+						<button
+							type='button'
+							class='btn btn-danger btn-lg'
+							onclick='window.location.href=`{% url "adminlist" %}`'
+						>
+							Cancelar
+						</button>
+						<button 
+							type='submit' 
+							class='btn btn-success btn-lg ml-4'
+						>
+							Salvar
+						</button>
+					</footer>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script type='text/javascript'>
+	const botao = document.getElementById('foto');
+	const imagem = document.getElementById('previa');
+	const senha = document.getElementById('senha');
+	const visualizador = document.getElementById('visualizar');
+
+	function exibirSenha() {
+		if (senha.type === 'password') {
+    		senha.type = 'text';
+    		visualizador.className = 'fas fa-eye-slash';
+		} else {
+			senha.type = 'password';
+			visualizador.className = 'fas fa-eye';
+		}
+	}
+
+	botao.addEventListener('change', function() {
+		const arquivo = this.files[0];
+		
+		if (arquivo) {
+			const leitor = new FileReader();
+
+			leitor.addEventListener('load', function() {
+				imagem.setAttribute('src', this.result);	
+			});
+
+			leitor.readAsDataURL(arquivo);
+		}
+	});
+
+	$('form').on('submit', function() {
+        $('button[type="submit"]').attr('disabled', true);
+        return true;
+    });
+</script>
+{% endblock %}

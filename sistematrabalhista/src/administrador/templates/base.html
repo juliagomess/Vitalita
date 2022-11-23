@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang='pt-br'>
+<head>
+	<meta charset='utf-8' />
+	<meta name='viewport' content='width=device-width, initial-scale=1' />
+	<link rel='stylesheet' type='text/css' href='{% static "bootstrap/css/bootstrap.min.css" %}' />
+	<link rel='stylesheet' type='text/css' href='{% static "css/base.css" %}' />
+	<link rel='stylesheet' type='text/css' href='{% static "css/list.css" %}' />
+	<link rel='stylesheet' type='text/css' href='{% static "css/form.css" %}' />
+	<script src='https://kit.fontawesome.com/50797efa34.js'></script>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+	{% if request.user.acessibilidade == 'leitor' %}
+		<script type='text/javascript' src='{% static "js/reader.js" %}'></script>
+	{% endif %}
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js'></script>
+	<script type='text/javascript' src='{% static "bootstrap/js/bootstrap.min.js" %}'></script>
+	<script type='text/javascript' src='{% static "js/search.js" %}'></script>
+	<script type='text/javascript' src='{% static "js/mask.js" %}'></script> 
+	<script type='text/javascript' src='{% static "js/validate.js" %}'></script>
+	<title>Administrativo</title>
+</head>
+<body>
+	<header class='navbar navbar-expand-lg navbar-dark static-top border-bottom border-secondary' style="background: #022545">
+		<div class='container-fluid'>
+			<span class='navbar-brand'>
+				<img src='{{ request.user.foto.url }}' alt='{{ request.user.nome }}' class='d-inline-block align-top' />
+			</span>
+			{% block titulo %}
+			{% endblock %}
+			<button type='button' class='navbar-toggler collapsed' data-toggle='collapse' data-target='#lateral' aria-controls='lateral' aria-hidden='true' aria-expanded='false'>
+				<span class='navbar-toggler-icon'></span>
+			</button>
+		</div>
+	</header>
+	<div class='container-fluid'>
+		<div class='row'>
+			<aside id='lateral' class='col-md-3 col-lg-2 d-md-block sidebar collapse'  style="background: #022545">
+				<header class='sidebar-header'>
+					<i class='fas fa-home'>Administrativo</i>
+				</header>
+				<nav class='sidebar-sticky pt-3'>
+					<strong class='sidebar-heading d-flex mt-4'>Contas</strong>
+					<ul class='nav flex-column mb-2'>
+						<li class='nav-item'>
+							<a class='nav-link' href='{% url "adminlist" %}'>
+								<i class='fas fa-user-shield'>
+									Administradores
+								</i>
+							</a>
+						</li>
+						<li class='nav-item'>
+							<a class='nav-link' href='{% url "associatedlist" %}'>
+								<i class='fa fa-users'>
+									Associados
+								</i>
+							</a>
+						</li>
+						<li class='nav-item'>
+							<a class='nav-link' href='{% url "companylist" %}'>
+								<i class='fas fa-user-tie'>
+									Empresas
+								</i>
+							</a>
+						</li>
+					</ul>
+					<strong class='sidebar-heading d-flex mt-4'>Contéudo</strong>
+					<ul class='nav flex-column mb-2'>
+						<li class='nav-item'>
+							<a class='nav-link' href='{% url "resumelist" %}'>
+								<i class='fa fa-file-text'>
+									Currículos
+								</i>
+							</a>
+						</li>
+						<li class='nav-item'>
+							<a class='nav-link' href='{% url "courselist" %}'>
+								<i class='fas fa-book'>
+									Cursos
+								</i>
+							</a>
+						</li>
+						<li class='nav-item'>
+							<a class='nav-link' href='{% url "eventlist" %}'>
+								<i class='fas fa-palette'>
+									Eventos
+								</i>
+							</a>
+						</li>
+						<li class='nav-item'>
+							<a class='nav-link' href='{% url "gamelist" %}'>
+								<i class='fas fa-gamepad'>
+									Jogos
+								</i>
+							</a>
+						</li>
+						<li class='nav-item'>
+							<a class='nav-link' href='{% url "joblist" %}'>
+								<i class='fas fa-briefcase'>
+									Vagas de emprego
+								</i>
+							</a>
+						</li>
+						<li class='nav-item'>
+							<a class='nav-link' href='{% url "videolessonlist" %}'>
+								<i class='fab fa-youtube'>
+									Videoaulas
+								</i>
+							</a>
+						</li>
+					</ul>
+					<strong class='sidebar-heading d-flex mt-4'>Opções</strong>
+					<ul class='nav flex-column mb-2'>
+						<li class='nav-item'>
+							<a class='nav-link' href='{% url "changepassword" %}'>
+								<i class='fa fa-key'>Alterar senha</i>
+							</a>
+						</li>
+						<li class='nav-item'>
+							<a class='nav-link' href='{% url "logout" %}'>
+								<i class='fas fa-sign-out-alt'>
+									Sair
+								</i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</aside>
+			<div class='col-md-9 ml-sm-auto col-lg-10 px-md-4'>
+				{% block pagina %}
+				{% endblock %}
+			</div>
+		</div>
+	</div>
+</body>
+{% if request.user.acessibilidade == 'leitor' %}
+<script>
+	$("input, textarea").keydown(function(evento) {
+		let texto = evento.key;
+
+		if(/[a-zA-Z0-9\s\@\-\&\*\(\)\!]/.test(texto)) {
+			audio(`${texto}`);
+		}
+	});
+</script>
+{% endif %}
+</html>

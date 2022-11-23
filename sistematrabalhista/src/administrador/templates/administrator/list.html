@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+	<h3>Lista de Administradores</h3>
+{% endblock %}
+
+{% block pagina %}
+<div class='list'>
+	{% if administradores|length > 0 %}
+		<div class='input-group mb-3'>
+			<div class='input-group-prepend'>
+				<button class='btn btn-success' type='button' onclick='window.location.href=`{% url "admincreate" %}`'>Cadastrar</button>
+			</div>
+			<input type='text' class='form-control' placeholder='Pesquisar administrador pelo nome' />
+			<div class='input-group-append'>
+				<button class='btn btn-info' type='button' onclick='pesquisarAdministrador()'>Pesquisar</button>
+			</div>
+		</div>
+		<div class='table-responsive-lg shadow'>
+			<table class='table table-bordered table-hover'>
+				<thead class='thead-dark'>
+					<th scope='col' class='text-center align-middle'>Foto</th>
+					<th scope='col' class='text-center align-middle'>Nome</th>
+					<th scope='col' class='text-center align-middle'>RF</th>
+					<th scope='col' class='text-center align-middle'>Email</th>
+					<th scope='col' class='text-center align-middle'>Opções</th>
+				</thead>
+				<tbody>
+					{% for administrador in administradores %}
+						<tr>
+							<td class='text-center align-middle'>
+								<img 
+									src='{{ administrador.foto.url }}' 
+									alt='{{ administrador.nome }}' 
+									class='d-inline-block align-top'
+								/>
+							</td>
+							<td class='text-center align-middle'>{{ administrador.nome }}</td>
+							<td class='text-center align-middle'>{{ administrador.rf }}</td>
+							<td class='text-center align-middle'>{{ administrador.email }}</td>
+							<td class='text-center align-middle'>
+								<div class='form-row'>
+									<div class='col'>
+										<button 
+											type='button' 
+											class='btn btn-primary btn-md btn-block'
+											onclick='window.location.href=`{% url "adminedit" administrador.id %}`'
+										>
+											Alterar
+										</button>
+									</div>
+									<div class='col'>
+										<form method='post' action='{% url "admindelete" administrador.id %}'>
+											{% csrf_token %}
+											<button type='submit' class='btn btn-danger btn-md btn-block'>Remover</button>
+										</form>
+									</div>
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		<div class='empty'>
+			<div class='card shadow'>
+				<div class='card-body' onclick='window.location.href=`{% url "admincreate" %}`'>
+					<header>
+						<strong>Aviso</strong>
+						<i class='fas fa-times'></i>
+						<small>Ainda não existe administradores cadastrados</small>
+					</header>
+					<button class='btn btn-success btn-lg btn-block'>Novo Administrador</button>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+</div>
+{% endblock %}

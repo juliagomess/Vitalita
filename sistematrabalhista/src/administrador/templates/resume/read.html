@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+	<h3>Detalhes do currículo</h3>
+{% endblock %}
+
+{% block pagina %}
+<div class='form'>
+	<div class='container'>
+		<div class='card shadow'>
+			<div class='card-body'>
+				<a
+					class='btn btn-link'
+					href='{% url "resumelist" %}'
+				>
+					Voltar
+				</a>
+				<form method='post' action='.' autocomplete='off' enctype='multipart/form-data'>
+					{% csrf_token %}
+					<input 
+						type='hidden' 
+						id='associado_id' 
+						name='associado_id' 
+						value='{{ form.associado_id }}' 
+					/>
+					<input
+						type='hidden'
+						id='laudo_medico'
+						name='laudo_medico'
+						value='{{ form.laudo_medico }}'
+					/>
+
+					<div class='form-row'>
+						<div class='col'>
+							<label for='nome'>Nome</label>
+							<input
+								id='nome'
+								name='nome'
+								type='text'
+								value='{{ form.nome }}'
+								class='form-control'
+								readonly
+								required
+							/>
+						</div>
+						<div class='col'>
+							<label for='email'>E-mail</label>
+							<input
+								id='email'
+								name='email'
+								type='text'
+								value='{{ form.email }}'
+								class='form-control'
+								readonly
+								required
+							/>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='instituicao_ensino'>Instituições de ensino</label>
+							<textarea
+								id='instituicao_ensino'
+								name='instituicao_ensino'
+								class='form-control'
+								maxlength='255'
+							>{{ form.instituicao_ensino }}</textarea>
+						</div>
+						<div class='col'>
+							<label for='curso_extra'>Cursos extras</label>
+							<textarea
+								id='curso_extra'
+								name='curso_extra'
+								class='form-control'
+								maxlength='255'
+							>{{ form.curso_extra }}</textarea>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='empresa_trabalhada'>Empresas trabalhadas</label>
+							<textarea
+								id='empresa_trabalhada'
+								name='empresa_trabalhada'
+								class='form-control'
+								maxlength='255'
+							>{{ form.empresa_trabalhada }}</textarea>
+						</div>
+						<div class='col'>
+							<label for='cargo_ocupado'>Cargos ocupadas</label>
+							<textarea
+								id='cargo_ocupado'
+								name='cargo_ocupado'
+								class='form-control'
+								maxlength='255'
+							>{{ form.cargo_ocupado }}</textarea>
+						</div>
+					</div>
+
+					{% if form.download is not None %}
+						<div class='form-row pt-4'>
+							<div class='col'>
+								<a
+									class='btn btn-link'
+									href='{{ form.download }}'
+									download
+								>
+									Baixar laudo médico
+								</a>
+							</div>
+							<div class='col'>
+								<div class='custom-file'>
+									<input
+										type='file'
+										accept='image/*, application/pdf'
+										id='novo_laudo_medico'
+										name='novo_laudo_medico'
+										class='custom-file-input'
+									/>
+									<label class='custom-file-label' for='novo_laudo_medico'>Escolher Novo Laudo Médico</label>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+
+					<footer>
+						<button
+							type='button'
+							class='btn btn-danger btn-lg'
+							onclick='window.location.href=`{% url "resumelist" %}`'
+						>
+							Cancelar
+						</button>
+						<button 
+							type='submit' 
+							class='btn btn-success btn-lg ml-4'
+						>
+							Aprovar
+						</button>
+					</footer>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+		$('[data-toggle="tooltip"]').tooltip();
+	});
+
+	$('form').on('submit', function() {
+        $('button[type="submit"]').attr('disabled', true);
+        return true;
+    });
+</script>
+{% endblock %}

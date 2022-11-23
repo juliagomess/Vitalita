@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang='pt'>
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1'/>
+    <title>{{ form.titulo }}</title>
+    <style type='text/css'>
+		@page {
+			size: a4 portrait;
+			@frame footer {
+				-pdf-frame-content: footer;
+				left: 275pt;
+				top: 825pt;
+                width: 512pt;
+                height: 30pt;
+            }
+        }
+    </style>
+    <style type='text/css'>
+    	body {
+			font-family: Arial, Helvetica, sans-serif;
+		}
+		main.container {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		header {
+			display: flex;
+			flex-direction: column;
+		}
+		h1 {
+			font-size: 20px;
+			text-align: center;
+		}
+		.logo {
+			padding-top: 20px;
+			justify-content: center;
+			align-items: center;
+            text-align: center;
+		}
+		.logo img {
+			width: 195px;
+            height: 195px;
+            border: 0;
+		}
+		section.contact {
+			justify-content: left;
+            align-items: left;
+            text-align: left;
+		}
+		.contact h5 {
+			font-size: 18px;
+            font-weight: bold;
+            padding-left: 20px;
+		}
+		.contact ul {
+			font-size: 16px;
+			padding-left: 30px;
+		}
+		section.job {
+			justify-content: left;
+            align-items: left;
+            text-align: left;
+		}
+		.job h5 {
+			font-size: 18px;
+            font-weight: bold;
+            padding-left: 20px;
+		}
+		.job ul {
+			font-size: 16px;
+			padding-left: 30px;
+		}
+    </style>
+</head>
+<body>
+	<main class='container'>
+		<header>
+			<div class='logo'>
+				<img src='{{ form.logo }}' alt='{{ form.titulo }}' />
+			</div>
+			<h1>{{ form.titulo }}</h1>
+			<hr>
+		</header>
+		<section class='contact'>
+			<h5>Dados da empresa</h5>
+
+			<ul>
+				<li>Razão social: {{ form.razao_social }}</li>
+				<li>Email: {{ form.email }}</li>
+			</ul>
+		</section>
+		<section class='job'>
+			<h5>Dados da vaga</h5>
+
+			<ul>
+				<li>Titulo: {{ form.titulo }}</li>
+				<li>Data de expiração: {{ form.data_exp }}</li>
+				<li>Descrição: {{ form.descricao }}</li>
+				<li>URL: {{ form.url }}</li>
+			</ul>
+		</section>
+		<div id='footer'>
+            Página <pdf:pagenumber> de <pdf:pagecount>
+        </div>
+	</main>
+</body>
+</html>

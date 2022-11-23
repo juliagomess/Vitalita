@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block pagina %}
+<div class='form'>
+	<div class='container'>
+		<div class='card shadow'>
+			<div class='card-body'>
+				<a
+					class='btn btn-link'
+					href='{% url "associatedlist" %}'
+				>
+					Voltar
+				</a>
+				<form>
+					<div class='container text-center'>
+						<img
+							src='{{ form.foto }}'
+							alt='{{ form.nome }}'
+							class='img-fluid'
+							style='height: 7em; width: 7em; border-radius: 50%;'
+						/>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='nome'>Nome</label>
+							<input
+								type='text'
+								id='nome'
+								name='nome'
+								readonly
+								class='form-control'
+								value='{{ form.nome }}'
+							/>
+						</div>
+						<div class='col'>
+							<label for='data_nascimento'>Data de nascimento</label>
+							<input
+								type='date'
+								id='data_nascimento'
+								name='data_nascimento'
+								readonly
+								class='form-control'
+								value='{{ form.data_nascimento|date:"Y-m-d" }}'
+								style='::-ms-clear {
+    								display: none;
+								}'
+							/>
+						</div>
+						<div class='col'>
+							<label for='cpf'>CPF</label>
+							<input
+								type='text'
+								id='cpf'
+								name='cpf'
+								readonly
+								class='form-control'
+								value='{{ form.cpf }}'
+							/>
+						</div>
+						<div class='col'>
+							<label for='pcd'>Portador de necessidades especiais</label>
+							{% if form.pcd == 1 %}
+								<input
+									type='text'
+									id='pcd'
+									name='pcd'
+									class='form-control'
+									value='Sim'
+									readonly
+								/>
+							{% else %}
+								<input
+									type='text'
+									id='pcd'
+									name='pcd'
+									class='form-control'
+									value='Não'
+									readonly
+								/>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='celular'>Celular</label>
+							<input
+								type='text'
+								id='celular'
+								name='celular'
+								readonly
+								class='form-control'
+								value='{{ form.celular }}'
+							/>
+						</div>
+						<div class='col'>
+							<label for='email'>Email</label>
+							<input
+								type='email'
+								id='email'
+								name='email'
+								readonly
+								class='form-control'
+								value='{{ form.email }}'
+							/>
+						</div>
+						<div class='col'>
+							<label for='cep'>CEP</label>
+							<input
+								type='text'
+								id='cep'
+								name='cep'
+								readonly
+								class='form-control'
+								value='{{ form.cep }}'
+							/>
+						</div>
+						<div class='col'>
+							<label for='numero'>Numero</label>
+							<input
+								type='text'
+								id='numero'
+								name='numero'
+								readonly
+								class='form-control'
+								value='{{ form.numero }}'
+							/>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='instituicao_ensino'>Instituições de ensino</label>
+							<textarea
+							id='instituicao_ensino'
+							name='instituicao_ensino'
+							readonly
+							class='form-control'
+							placeholder='Nenhuma informação fornecida'
+						>{{ form.instituicao_ensino }}</textarea>
+						</div>
+						<div class='col'>
+							<label for='curso_extra'>Cursos extras</label>
+							<textarea
+							id='curso_extra'
+							name='curso_extra'
+							readonly
+							class='form-control'
+							placeholder='Nenhuma informação fornecida'
+						>{{ form.curso_extra }}</textarea>
+						</div>
+						<div class='col'>
+							<label for='empresa_trabalhada'>Empresas trabalhadas</label>
+							<textarea
+							id='empresa_trabalhada'
+							name='empresa_trabalhada'
+							readonly
+							class='form-control'
+							placeholder='Nenhuma informação fornecida'
+						>{{ form.empresa_trabalhada }}</textarea>
+						</div>
+						<div class='col'>
+							<label for='cargo_ocupado'>Cargos ocupados</label>
+							<textarea
+							id='cargo_ocupado'
+							name='cargo_ocupado'
+							readonly
+							class='form-control'
+							placeholder='Nenhuma informação fornecida'
+						>{{ form.cargo_ocupado }}</textarea>
+						</div>
+					</div>
+
+					<div class='form-row pt-4'>
+						<div class='col'>
+							<label for='outras_informacoes'>Outras informações</label>
+							<textarea
+							id='outras_informacoes'
+							name='outras_informacoes'
+							readonly
+							class='form-control'
+							placeholder='Nenhuma informação fornecida'
+						>{{ form.outras_informacoes }}</textarea>
+						</div>
+						<div class='col'>
+							<a
+								role='button'
+								class='btn btn-link'
+								href='{% url "associatedpdf" form.id %}'
+							>
+								Gerar PDF
+							</a>
+							{% if form.laudo_medico is not None %}
+								<a
+									role='button'
+									class='btn btn-link ml-4'
+									href='{{ form.laudo_medico }}'
+									download
+								>
+									Baixar laudo médico
+								</a>
+							{% endif %}
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

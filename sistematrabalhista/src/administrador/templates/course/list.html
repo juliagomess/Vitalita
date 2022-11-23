@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+	<h3>Lista de Cursos</h3>
+{% endblock %}
+
+{% block pagina %}
+<div class='list'>
+	{% if cursos|length > 0 %}
+		<div class='input-group mb-3'>
+			<div class='input-group-prepend'>
+				<button class='btn btn-success' type='button' onclick='window.location.href=`{% url "coursecreate" %}`'>Cadastrar</button>
+			</div>
+			<input type='text' class='form-control' placeholder='Pesquisar curso pelo titulo' />
+			<div class='input-group-append'>
+				<button class='btn btn-info' type='button' onclick='pesquisarCurso()'>Pesquisar</button>
+			</div>
+		</div>
+		<div class='table-responsive-lg shadow'>
+			<table class='table table-bordered table-hover'>
+				<thead class='thead-dark'>
+					<th scope='col' class='text-center align-middle'>Titulo</th>
+					<th scope='col' class='text-center align-middle'>Data de expiração</th>
+					<th scope='col' class='text-center align-middle'>Opções</th>
+				</thead>
+				<tbody>
+					{% for curso in cursos %}
+						<tr>
+							<td class='text-center align-middle'>{{ curso.titulo }}</td>
+							<td class='text-center align-middle'>{{ curso.data_exp }}</td>
+							<td class='text-center align-middle'>
+								<div class='form-row'>
+									<div class='col'>
+										<button 
+											type='button' 
+											class='btn btn-primary btn-md btn-block'
+											onclick='window.location.href=`{% url "courseedit" curso.id %}`'
+										>
+											Alterar
+										</button>
+									</div>
+									<div class='col'>
+										<form method='post' action='{% url "coursedelete" curso.id %}'>
+											{% csrf_token %}
+											<button type='submit' class='btn btn-danger btn-md btn-block'>Remover</button>
+										</form>
+									</div>
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		<div class='empty'>
+			<div class='card shadow'>
+				<div class='card-body' onclick='window.location.href=`{% url "coursecreate" %}`'>
+					<header>
+						<strong>Aviso</strong>
+						<i class='fas fa-times'></i>
+						<small>Ainda não existem cursos cadastrados</small>
+					</header>
+					<button class='btn btn-success btn-lg btn-block'>Novo Curso</button>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+</div>
+{% endblock %}

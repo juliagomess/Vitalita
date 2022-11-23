@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block pagina %}
+<div class='list'>
+	<div class='container'>
+		<ul class='row'>
+			<li class='col-sm-4 pb-4'>
+				<div class='card shadow'>
+					<div class='card-body'>
+						<h5 class='card-title text-center'>Currículo</h5>
+						<button
+							type='button' 
+							class='btn btn-info btn-block'
+							onclick='window.location.href=`{% url "resumelist" %}`'
+						>
+							Acessar
+						</button>
+					</div>
+				</div>
+			</li>
+			<li class='col-sm-4 pb-4'>
+				<div class='card shadow'>
+					<div class='card-body'>
+						<h5 class='card-title text-center'>Cursos</h5>
+						<button
+							type='button' 
+							class='btn btn-info btn-block'
+							onclick='window.location.href=`{% url "courselist" %}`'
+						>
+							Acessar
+						</button>
+					</div>
+				</div>
+			</li>
+			<li class='col-sm-4 pb-4'>
+				<div class='card shadow'>
+					<div class='card-body'>
+						<h5 class='card-title text-center'>Eventos</h5>
+						<button
+							type='button' 
+							class='btn btn-info btn-block'
+							onclick='window.location.href=`{% url "eventlist" %}`'
+						>
+							Acessar
+						</button>
+					</div>
+				</div>
+			</li>
+			<li class='col-sm-4 pb-4'>
+				<div class='card shadow'>
+					<div class='card-body'>
+						<h5 class='card-title text-center'>Jogos</h5>
+						<button
+							type='button' 
+							class='btn btn-info btn-block'
+							onclick='window.location.href=`{% url "gamelist" %}`'
+						>
+							Acessar
+						</button>
+					</div>
+				</div>
+			</li>
+			<li class='col-sm-4 pb-4'>
+				<div class='card shadow'>
+					<div class='card-body'>
+						<h5 class='card-title text-center'>Vagas</h5>
+						<button
+							type='button' 
+							class='btn btn-info btn-block'
+							onclick='window.location.href=`{% url "joblist" %}`'
+						>
+							Acessar
+						</button>
+					</div>
+				</div>
+			</li>
+			<li class='col-sm-4'>
+				<div class='card shadow'>
+					<div class='card-body'>
+						<h5 class='card-title text-center'>Videoaulas</h5>
+						<button
+							type='button' 
+							class='btn btn-info btn-block'
+							onclick='window.location.href=`{% url "videolessonlist" %}`'
+						>
+							Acessar
+						</button>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
+{% endblock %}

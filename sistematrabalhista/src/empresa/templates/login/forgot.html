@@ -1,0 +1,17 @@
+{% extends 'login/index.html' %}
+{% load static %}
+
+{% block formulario %}
+<div>
+	<img src='{% static "assets/padlock.svg" %}' class='rounded mx-auto d-block' alt='' />
+
+	<p class='text-muted text-justify'>
+		Para recuperar as suas informações de acesso é muito simples. 
+        Basta contatar um dos administradores e informar a situação, então ele irá trocar a sua senha.
+	</p>
+
+	<div class='form-row'>
+		<button class='btn btn-link' onclick='window.location.href=`{% url "login" %}`'>Voltar</button>
+	</div>
+</div>
+{% endblock %}
