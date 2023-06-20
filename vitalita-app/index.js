@@ -164,9 +164,17 @@ app.post('/buscaCurso', async(req,res) => {
         if (err) throw err
 
         if(rows[0] != undefined) {
+
+            for(let i=0;true;i++){
+                if(rows[i]==undefined)
+                    break
+                else {
+                    rows[i].logo = base64_encode(rows[i].logo)
+                }
+            }
+            console.log(rows)
             res.json({cursos: rows});
         } else {
-            console.log("nada");
             res.json({cursos: []});
         }
     });    
@@ -187,7 +195,6 @@ app.get('/eventos', async(req,res) => {
                     // copiarArquivo(rows[i].logo,'evento/evento'+ rows[i].id + '.png');
                 }
             }
-
             res.json({eventos: rows});
         } else {
             res.json({eventos: []});
@@ -202,7 +209,15 @@ app.post('/buscaEvento', async(req,res) => {
         if (err) throw err
 
         if(rows[0] != undefined) {
-            console.log(rows);
+            
+            for(let i=0;true;i++){
+                if(rows[i]==undefined)
+                    break
+                else {
+                    rows[i].logo = base64_encode(rows[i].logo)
+                }
+            }
+
             res.json({eventos: rows});
         } else {
             console.log("nada");
@@ -239,6 +254,15 @@ app.post('/buscaJogo', async(req,res) => {
         if (err) throw err
 
         if(rows[0] != undefined) {
+
+            for(let i=0;true;i++){
+                if(rows[i]==undefined)
+                    break
+                else {
+                    rows[i].logo = base64_encode(rows[i].logo)
+                }
+            }
+
             res.json({jogos: rows});
         } else {
             console.log("nada");
@@ -276,6 +300,15 @@ app.post('/buscaVideoaula', async(req,res) => {
         if (err) throw err
 
         if(rows[0] != undefined) {
+
+            for(let i=0;true;i++){
+                if(rows[i]==undefined)
+                    break
+                else {
+                    rows[i].logo = base64_encode(rows[i].logo)
+                }
+            }
+
             res.json({videoaulas: rows});
         } else {
             console.log("nada");
@@ -313,6 +346,15 @@ app.post('/buscaVaga', async(req,res) => {
         if (err) throw err
 
         if(rows[0] != undefined) {
+
+            for(let i=0;true;i++){
+                if(rows[i]==undefined)
+                    break
+                else {
+                    rows[i].logo = base64_encode(rows[i].logo)
+                }
+            }
+
             res.json({vagas: rows});
         } else {
             console.log("nada");
